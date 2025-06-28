@@ -1,41 +1,66 @@
 FILE SERVER
-TUJUAN: melayani client dalam request file server
+TUJUAN: melayani permintaan client terhadap layanan file server
 
 ATURAN PROTOKOL:
-- client harus mengirimkan request dalam bentuk string
-- string harus dalam format
+- Client wajib mengirim request dalam bentuk string
+- Format request harus:
   REQUEST spasi PARAMETER
-- PARAMETER dapat berkembang menjadi PARAMETER1 spasi PARAMETER2 dan seterusnya
+- PARAMETER dapat terdiri dari beberapa nilai, dipisahkan spasi
+  (contoh: PARAMETER1 PARAMETER2, dst.)
 
-REQUEST YANG DILAYANI:
-- informasi umum:
-  * Jika request tidak dikenali akan menghasilkan pesan
+REQUEST YANG DIDUKUNG:
+- Informasi umum:
+  * Jika request tidak dikenali, server akan membalas:
     - status: ERROR
     - data: request tidak dikenali
-  * Semua result akan diberikan dalam bentuk JSON dan diakhiri
-    dengan character ascii code #13#10#13#10 atau "\r\n\r\n"
+  * Semua respons dikirim dalam format JSON dan diakhiri dengan
+    karakter ASCII code #13#10#13#10 atau "\r\n\r\n"
 
 LIST
-* TUJUAN: untuk mendapatkan daftar seluruh file yang dilayani oleh file server
+* TUJUAN: mendapatkan daftar lengkap file yang tersedia di file server
 * PARAMETER: tidak ada
 * RESULT:
-- BERHASIL:
-  - status: OK
-  - data: list file
-- GAGAL:
-  - status: ERROR
-  - data: pesan kesalahan
+  - BERHASIL:
+    - status: OK
+    - data: daftar file
+  - GAGAL:
+    - status: ERROR
+    - data: pesan kesalahan
 
 GET
-* TUJUAN: untuk mendapatkan isi file dengan menyebutkan nama file dalam parameter
+* TUJUAN: mengambil isi file tertentu dengan menyebutkan nama file
 * PARAMETER:
-  - PARAMETER1 : nama file
+  - PARAMETER1: nama file yang diminta
 * RESULT:
-- BERHASIL:
-  - status: OK
-  - data_namafile : nama file yang diminta
-  - data_file : isi file yang diminta (dalam bentuk base64)
-- GAGAL:
-  - status: ERROR
-  - data: pesan kesalahan
+  - BERHASIL:
+    - status: OK
+    - data_namafile: nama file yang diminta
+    - data_file: isi file dalam format base64
+  - GAGAL:
+    - status: ERROR
+    - data: pesan kesalahan
 
+UPLOAD
+* TUJUAN: mengirim dan menyimpan file baru ke server
+* PARAMETER:
+  - PARAMETER1: nama file tujuan (misalnya: test_upload.txt)
+  - PARAMETER2: isi file dalam format base64 (tanpa spasi, langsung hasil encoding)
+* RESULT:
+  - BERHASIL:
+    - status: OK
+    - data: nama_file berhasil diupload
+  - GAGAL:
+    - status: ERROR
+    - data: pesan kesalahan
+
+DELETE
+* TUJUAN: menghapus file tertentu dari file server
+* PARAMETER:
+  - PARAMETER1: nama file yang ingin dihapus
+* RESULT:
+  - BERHASIL:
+    - status: OK
+    - data: nama_file berhasil dihapus
+  - GAGAL:
+    - status: ERROR
+    - data: pesan kesalahan
